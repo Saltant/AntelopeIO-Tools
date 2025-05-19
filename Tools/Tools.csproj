@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Saltant.AntelopeIO.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>Saltant.AntelopeIO.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <Title>AntelopeIO Tools</Title>
+	<Authors>Saltant</Authors>
+	<Description>Various supporting tools for AntelopeIO blockchains.</Description>
+	<PackageProjectUrl>https://github.com/Saltant/AntelopeIO-Tools</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/Saltant/AntelopeIO-Tools.git</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
+	<PackageTags>AntelopeIO, EOSIO, Leap, Nodeos, Spring, EOS, WAX, TELOS, XPR Network, Vaulta</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.0" />
+  </ItemGroup>
+
+</Project>
