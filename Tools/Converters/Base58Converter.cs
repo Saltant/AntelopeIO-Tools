@@ -1,4 +1,5 @@
 ﻿using Org.BouncyCastle.Math;
+using System.Text;
 
 namespace Saltant.AntelopeIO.Tools.Converters
 {
@@ -27,26 +28,25 @@ namespace Saltant.AntelopeIO.Tools.Converters
             return BigIntegerToBase58(bigInt);
         }
 
-        // Кодирование в Base58 с учетом ведущих нулей
+        // Base58 encoding with leading zeros
         public static string EncodeWithLeadingZeros(byte[] input)
         {
-            // Подсчет ведущих нулей
+            // leading zero count
             int leadingZeros = 0;
             while (leadingZeros < input.Length && input[leadingZeros] == 0)
             {
                 leadingZeros++;
             }
 
-            // Преобразование остатка в Base58
+            // Residue conversion in Base58
             var bigInt = new BigInteger(1, input);
             string base58 = BigIntegerToBase58(bigInt);
 
-            // Добавление символов '1' за ведущие нули
+            // Adding '1' characters behind leading zeros
             return new string('1', leadingZeros) + base58;
         }
 
-
-        // Преобразование строки Base58 в BigInteger с использованием Base58Map
+        // Converting Base58 string to BigInteger using Base58Map
         static BigInteger Base58ToBigInteger(string input)
         {
             BigInteger result = BigInteger.Zero;
@@ -62,7 +62,7 @@ namespace Saltant.AntelopeIO.Tools.Converters
             return result;
         }
 
-        // Преобразование BigInteger в Base58
+        // Converting BigInteger to Base58
         static string BigIntegerToBase58(BigInteger value)
         {
             List<char> result = [];

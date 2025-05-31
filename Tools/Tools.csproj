@@ -13,6 +13,7 @@
 	<RepositoryUrl>https://github.com/Saltant/AntelopeIO-Tools.git</RepositoryUrl>
 	<RepositoryType>git</RepositoryType>
 	<PackageTags>AntelopeIO, EOSIO, Leap, Nodeos, Spring, EOS, WAX, TELOS, XPR Network, Vaulta</PackageTags>
+	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
