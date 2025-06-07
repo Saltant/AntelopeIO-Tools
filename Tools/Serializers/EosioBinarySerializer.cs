@@ -2,6 +2,20 @@
 
 namespace Saltant.AntelopeIO.Tools.Serializers
 {
+    /// <summary>
+    /// Provides methods for serializing data into binary formats compatible with the EOSIO blockchain protocol,
+    /// as used in the <see href="https://xprnetwork.org">XPR Network</see>.
+    /// </summary>
+    /// <remarks>
+    /// This class supports serialization of various EOSIO data types, including variable-length integers (varuint32),
+    /// account names, timestamps, actions, and transactions. The serialized output is compatible with the
+    /// <see href="https://github.com/wharfkit/antelope">WharfKit</see> library and adheres to EOSIO's serialization
+    /// specifications. All numeric data is encoded in little-endian format, as required by the EOSIO protocol.
+    /// <para>
+    /// For more details on EOSIO serialization, see:
+    /// <see href="https://developers.eos.io/manuals/eos/latest/protocol/serialization">EOSIO Serialization</see>.
+    /// </para>
+    /// </remarks>
     public class EosioBinarySerializer
     {
         /// <summary>
@@ -168,8 +182,30 @@ namespace Saltant.AntelopeIO.Tools.Serializers
         }
 
         /// <summary>
-        /// Serializes an Action object into a byte array.
+        /// Serializes an <see cref="POCO.Action"/> object into a byte array compatible with the EOSIO blockchain protocol.
         /// </summary>
+        /// <param name="action">The action object containing account name, action name, authorization data, and action data.</param>
+        /// <returns>A byte array representing the serialized action, including account, name, authorizations, and data.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="action"/>, <see cref="POCO.Action.Account"/>, 
+        /// <see cref="POCO.Action.Name"/>, <see cref="POCO.Action.Authorization"/>, or <see cref="POCO.Action.Data"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown if any authorization's <see cref="POCO.Authorization.Actor"/> or 
+        /// <see cref="POCO.Authorization.Permission"/> is invalid.</exception>
+        /// <remarks>
+        /// The method serializes the action in the following order:
+        /// <list type="number">
+        /// <item><description>Account name (using <see cref="SerializeName"/>).</description></item>
+        /// <item><description>Action name (using <see cref="SerializeName"/>).</description></item>
+        /// <item><description>Authorization array length (using <see cref="SerializeVarUint32"/>).</description></item>
+        /// <item><description>Authorization data (actor and permission names, each serialized using <see cref="SerializeName"/>).</description></item>
+        /// <item><description>Action data length (using <see cref="SerializeVarUint32"/>).</description></item>
+        /// <item><description>Action data (converted from a hexadecimal string to bytes).</description></item>
+        /// </list>
+        /// This format is compatible with the EOSIO action structure, as used in XPR Network transactions.
+        /// <para>
+        /// For more details on EOSIO actions, see:
+        /// <see href="https://developers.eos.io/manuals/eos/latest/protocol/actions">EOSIO Actions</see>.
+        /// </para>
+        /// </remarks>
         public static byte[] SerializeAction(POCO.Action action)
         {
             ArgumentNullException.ThrowIfNull(action, nameof(action));
@@ -198,8 +234,32 @@ namespace Saltant.AntelopeIO.Tools.Serializers
         }
 
         /// <summary>
-        /// Serializes a Transaction object into a byte array according to EOSIO serialization rules.
+        /// Serializes a <see cref="Transaction"/> object into a byte array compatible with the EOSIO blockchain protocol.
         /// </summary>
+        /// <param name="transaction">The transaction object containing expiration, block references, resource limits, actions, and extensions.</param>
+        /// <returns>A byte array representing the serialized transaction.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="transaction"/>, <see cref="Transaction.Expiration"/>, 
+        /// <see cref="Transaction.ContextFreeActions"/>, <see cref="Transaction.Actions"/>, or <see cref="Transaction.TransactionExtensions"/> is null.</exception>
+        /// <exception cref="ArgumentException">Thrown if <see cref="Transaction.Expiration"/> cannot be parsed as a valid timestamp.</exception>
+        /// <remarks>
+        /// The method serializes the transaction in the following order:
+        /// <list type="number">
+        /// <item><description>Expiration time (as seconds since Unix epoch, uint32, little-endian).</description></item>
+        /// <item><description>Reference block number (uint16, Ascending).</description></item>
+        /// <item><description>Reference block prefix (uint32, little-endian).</description></item>
+        /// <item><description>Maximum net usage words (varuint32, using <see cref="SerializeVarUint32"/>).</description></item>
+        /// <item><description>Maximum CPU usage in milliseconds (varuint32, using <see cref="SerializeVarUint32"/>).</description></item>
+        /// <item><description>Delay in seconds (varuint32, using <see cref="SerializeVarUint32"/>).</description></item>
+        /// <item><description>Context-free actions array length (varuint32, using <see cref="SerializeVarUint32"/>).</description></item>
+        /// <item><description>Actions array length (varuint32, using <see cref="SerializeVarUint32"/>) followed by serialized actions (using <see cref="SerializeAction"/>).</description></item>
+        /// <item><description>Transaction extensions array length (varuint32, using <see cref="SerializeVarUint32"/>).</description></item>
+        /// </list>
+        /// This format adheres to the EOSIO transaction structure, as used in XPR Network.
+        /// <para>
+        /// For more details on EOSIO transactions, see:
+        /// <see href="https://developers.eos.io/manuals/eos/latest/protocol/transactions">EOSIO Transactions</see>.
+        /// </para>
+        /// </remarks>
         public static byte[] SerializeTransaction(Transaction? transaction)
         {
             ArgumentNullException.ThrowIfNull(transaction);

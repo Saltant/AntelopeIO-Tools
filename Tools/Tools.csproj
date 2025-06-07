@@ -14,6 +14,8 @@
 	<RepositoryType>git</RepositoryType>
 	<PackageTags>AntelopeIO, EOSIO, Leap, Nodeos, Spring, EOS, WAX, TELOS, XPR Network, Vaulta</PackageTags>
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	<VersionPrefix>1.0.1</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
